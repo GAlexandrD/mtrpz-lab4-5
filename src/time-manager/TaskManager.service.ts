@@ -1,15 +1,14 @@
-import { DB } from '../datastore/db';
 import { ITask, ITaskP } from '../types/ITask.js';
 import { TaskService } from '../datastore/task.service.js';
 
 export class TaskManager {
-  db: DB;
-  constructor(db: DB) {
-    this.db = db;
+  tasks: TaskService;
+  constructor(tasks: TaskService) {
+    this.tasks = tasks;
   }
 
   async createTask(task: ITask): Promise<string> {
-    const newTask = await TaskService.createTask(this.db, task);
+    const newTask = await this.tasks.createTask(task);
     return this.serializeTask(newTask);
   }
 
@@ -32,7 +31,7 @@ export class TaskManager {
   }
 
   async getUndone(): Promise<string> {
-    const tasks = await TaskService.getAllTasks(this.db);
+    const tasks = await this.tasks.getAllTasks();
     const undone = tasks.filter((task) => {
       if (task.done == '') return task;
     });
@@ -61,7 +60,7 @@ export class TaskManager {
   }
 
   async getOmited(): Promise<string> {
-    const tasks = await TaskService.getAllTasks(this.db);
+    const tasks = await this.tasks.getAllTasks();
     const omited = tasks.filter((task) => {
       return this.isOmited(task);
     });
@@ -70,23 +69,23 @@ export class TaskManager {
   }
 
   async getAllTasks(): Promise<string> {
-    const tasks = await TaskService.getAllTasks(this.db);
+    const tasks = await this.tasks.getAllTasks();
     const sorted = this.sortByDeadLine(tasks);
     return this.serializeList(sorted);
   }
 
   async markDone(name: string): Promise<string> {
-    const task = await TaskService.markDone(this.db, name);
+    const task = await this.tasks.markDone(name);
     return this.serializeTask(task);
   }
 
   async editTask(name: string, edit: ITaskP): Promise<string> {
-    const task = await TaskService.editTask(this.db, name, edit);
+    const task = await this.tasks.editTask(name, edit);
     return this.serializeTask(task);
   }
 
   async removeTask(name: string): Promise<string> {
-    const task = await TaskService.removeTask(this.db, name);
+    const task = await this.tasks.removeTask(name);
     return this.serializeTask(task);
   }
 
