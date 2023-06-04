@@ -1,5 +1,12 @@
-import fs from 'fs/promises';
-import path from 'path';
+import {
+  access,
+  appendFile,
+  mkdir,
+  readFile,
+  unlink,
+  writeFile,
+} from 'fs/promises';
+import { join } from 'path';
 import { DbErrorMessages } from './errors/db-errors-enum';
 
 interface Index {
@@ -14,12 +21,12 @@ export class DB {
   }
 
   async open() {
-    const indexPath = path.join(this.path, 'index');
-    await fs.mkdir(this.path, { recursive: true });
+    const indexPath = join(this.path, 'index');
+    await mkdir(this.path, { recursive: true });
     try {
-      await fs.access(indexPath);
+      await access(indexPath);
     } catch (error) {
-      await fs.appendFile(indexPath, JSON.stringify({}));
+      await appendFile(indexPath, JSON.stringify({}));
     }
     this.index = await this.getIndex();
   }
@@ -28,11 +35,11 @@ export class DB {
     if (!this.index) throw new Error(DbErrorMessages.ERROR_NOT_OPENED);
     if (!this.index[model]) this.index[model] = [];
     const fileName = Math.random().toString(16).slice(2);
-    const filePath = path.join(this.path, model, fileName);
+    const filePath = join(this.path, model, fileName);
     const jsonString = JSON.stringify(obj);
-    const fileDir = path.join(this.path, model);
-    await fs.mkdir(fileDir, { recursive: true });
-    await fs.appendFile(filePath, jsonString);
+    const fileDir = join(this.path, model);
+    await mkdir(fileDir, { recursive: true });
+    await appendFile(filePath, jsonString);
     await this.addIndex(model, fileName);
   }
 
@@ -40,7 +47,7 @@ export class DB {
     if (!this.index) throw new Error(DbErrorMessages.ERROR_NOT_OPENED);
     if (!this.index[model]) return null;
     for (const id of this.index[model]) {
-      const obj = await this.readFile(path.join(this.path, model, id));
+      const obj = await this.readFile(join(this.path, model, id));
       if (!where) return obj;
       let isValid = true;
       for (const key of Object.keys(where)) {
@@ -56,11 +63,11 @@ export class DB {
     if (!this.index[model]) return null;
     let res: any = null;
     for (const id of this.index[model]) {
-      const filePath = path.join(this.path, model, id);
+      const filePath = join(this.path, model, id);
       const obj = await this.readFile(filePath);
       if (!where) {
         res = obj;
-        await fs.unlink(filePath);
+        await unlink(filePath);
         await this.removeIndex(model, id);
         break;
       }
@@ -70,7 +77,7 @@ export class DB {
       }
       if (isValid) {
         res = obj;
-        await fs.unlink(filePath);
+        await unlink(filePath);
         await this.removeIndex(model, id);
         break;
       }
@@ -83,21 +90,21 @@ export class DB {
     if (!this.index[model]) return null;
     const objs = [];
     for (const id of this.index[model]) {
-      const obj = await this.readFile(path.join(this.path, model, id));
+      const obj = await this.readFile(join(this.path, model, id));
       objs.push(obj);
     }
     return objs;
   }
 
   private async readFile(path: string) {
-    const buf = await fs.readFile(path);
+    const buf = await readFile(path);
     const obj = JSON.parse(buf.toString());
     return obj;
   }
 
   private async getIndex(): Promise<Index> {
-    const indexPath = path.join(this.path, 'index');
-    const buf = await fs.readFile(indexPath);
+    const indexPath = join(this.path, 'index');
+    const buf = await readFile(indexPath);
     const obj: Index = JSON.parse(buf.toString());
     return obj;
   }
@@ -108,19 +115,19 @@ export class DB {
       throw new Error(DbErrorMessages.ERROR_NO_SUCH_MODEL);
     if (!this.index[model].includes(fileName))
       throw new Error(DbErrorMessages.ERROR_NO_SUCH_RECORD);
-    const indexPath = path.join(this.path, 'index');
+    const indexPath = join(this.path, 'index');
     const newIndex = this.index[model].filter((r) => r !== fileName);
     this.index[model] = newIndex;
     const indexStr = JSON.stringify(this.index);
-    await fs.writeFile(indexPath, indexStr);
+    await writeFile(indexPath, indexStr);
   }
 
   private async addIndex(model: string, fileName: string) {
     if (!this.index) throw new Error(DbErrorMessages.ERROR_NOT_OPENED);
-    const indexPath = path.join(this.path, 'index');
+    const indexPath = join(this.path, 'index');
     if (!this.index[model]) this.index[model] = [];
     this.index[model].push(fileName);
     const indexStr = JSON.stringify(this.index);
-    await fs.writeFile(indexPath, indexStr);
+    await writeFile(indexPath, indexStr);
   }
 }
