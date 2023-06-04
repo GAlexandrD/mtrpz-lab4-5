@@ -1,13 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { DbErrorMessages } from './errors/db-errors-enum';
 
 interface Index {
   [key: string]: string[];
 }
-
-const ERROR_NOT_OPENED = 'Db wasn`t opened';
-const ERROR_NO_SUCH_MODEL = 'no such model';
-const ERROR_NO_SUCH_RECORD = 'no such record';
 
 export class DB {
   private index: Index | null = null;
@@ -28,7 +25,7 @@ export class DB {
   }
 
   async write(model: string, obj: any) {
-    if (!this.index) throw new Error(ERROR_NOT_OPENED);
+    if (!this.index) throw new Error(DbErrorMessages.ERROR_NOT_OPENED);
     if (!this.index[model]) this.index[model] = [];
     const fileName = Math.random().toString(16).slice(2);
     const filePath = path.join(this.path, model, fileName);
@@ -40,7 +37,7 @@ export class DB {
   }
 
   async readOne(model: string, where: any): Promise<any | null> {
-    if (!this.index) throw new Error(ERROR_NOT_OPENED);
+    if (!this.index) throw new Error(DbErrorMessages.ERROR_NOT_OPENED);
     if (!this.index[model]) return null;
     for (const id of this.index[model]) {
       const obj = await this.readFile(path.join(this.path, model, id));
@@ -55,7 +52,7 @@ export class DB {
   }
 
   async removeOne(model: string, where: any): Promise<any | null> {
-    if (!this.index) throw new Error(ERROR_NOT_OPENED);
+    if (!this.index) throw new Error(DbErrorMessages.ERROR_NOT_OPENED);
     if (!this.index[model]) return null;
     let res: any = null;
     for (const id of this.index[model]) {
@@ -82,7 +79,7 @@ export class DB {
   }
 
   async readAll(model: string): Promise<any[] | null> {
-    if (!this.index) throw new Error(ERROR_NOT_OPENED);
+    if (!this.index) throw new Error(DbErrorMessages.ERROR_NOT_OPENED);
     if (!this.index[model]) return null;
     const objs = [];
     for (const id of this.index[model]) {
@@ -106,10 +103,11 @@ export class DB {
   }
 
   private async removeIndex(model: string, fileName: string) {
-    if (!this.index) throw new Error(ERROR_NOT_OPENED);
-    if (!this.index[model]) throw new Error(ERROR_NO_SUCH_MODEL);
+    if (!this.index) throw new Error(DbErrorMessages.ERROR_NOT_OPENED);
+    if (!this.index[model])
+      throw new Error(DbErrorMessages.ERROR_NO_SUCH_MODEL);
     if (!this.index[model].includes(fileName))
-      throw new Error(ERROR_NO_SUCH_RECORD);
+      throw new Error(DbErrorMessages.ERROR_NO_SUCH_RECORD);
     const indexPath = path.join(this.path, 'index');
     const newIndex = this.index[model].filter((r) => r !== fileName);
     this.index[model] = newIndex;
@@ -118,7 +116,7 @@ export class DB {
   }
 
   private async addIndex(model: string, fileName: string) {
-    if (!this.index) throw new Error(ERROR_NOT_OPENED);
+    if (!this.index) throw new Error(DbErrorMessages.ERROR_NOT_OPENED);
     const indexPath = path.join(this.path, 'index');
     if (!this.index[model]) this.index[model] = [];
     this.index[model].push(fileName);

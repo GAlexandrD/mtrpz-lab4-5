@@ -1,17 +1,5 @@
+import { ITask, ITaskP } from 'src/types/ITask.js';
 import { DB } from './db.js';
-
-export interface ITask {
-  name: string;
-  description: string;
-  deadline: string;
-  done: string;
-}
-
-export interface ITaskP {
-  name?: string;
-  description?: string;
-  deadline?: string;
-}
 
 const ERROR_NOT_FOUND = 'task with such name doesn`t exists';
 const ERROR_EXISTS = 'task with such name already exists';
