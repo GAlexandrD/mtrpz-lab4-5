@@ -2,7 +2,7 @@ import { DB } from '../datastore/db';
 import { ITask, ITaskP } from '../types/ITask.js';
 import { TaskService } from '../datastore/task.service.js';
 
-export class Interface {
+export class TaskManager {
   db: DB;
   constructor(db: DB) {
     this.db = db;
