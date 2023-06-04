@@ -15,13 +15,13 @@ export class TaskManager {
 
   sortByDeadLine(tasks: ITask[]): ITask[] {
     return tasks.sort((a, b) => {
-      const isDoneA = a.done !== '' && b.done === ''
-      const isDoneB = a.done === '' && b.done !== ''
-      const noDeadLineA = a.deadline === '' && b.deadline !== ''
-      const noDeadLineB = a.deadline !== '' && b.deadline === ''
+      const isDoneA = a.done !== '' && b.done === '';
+      const isDoneB = a.done === '' && b.done !== '';
+      const noDeadLineA = a.deadline === '' && b.deadline !== '';
+      const noDeadLineB = a.deadline !== '' && b.deadline === '';
       const dateA = new Date(a.deadline);
       const dateB = new Date(b.deadline);
-      const isFartherA = dateA.getTime() > dateB.getTime()
+      const isFartherA = dateA.getTime() > dateB.getTime();
       if (isDoneA) return 1;
       if (isDoneB) return -1;
       if (noDeadLineA) return 1;
@@ -107,7 +107,6 @@ export class TaskManager {
       }
       res += `Deadline: ${color}${deadline}\x1b[0m\n`;
     }
-
     if (!task.done) {
       res += `State: \x1b[31mnot done\x1b[0m\n`;
     } else {
