@@ -5,8 +5,4 @@ export interface ITask {
   done: string;
 }
 
-export interface ITaskP {
-  name?: string;
-  description?: string;
-  deadline?: string;
-}
+export type ITaskP = Partial<Omit<ITask, 'done'>>;
