@@ -10,8 +10,8 @@ const ERROR_NO_SUCH_MODEL = 'no such model';
 const ERROR_NO_SUCH_RECORD = 'no such record';
 
 export class DB {
-  index: Index | null = null;
-  path: string;
+  private index: Index | null = null;
+  private path: string;
   constructor(path: string) {
     this.path = path;
   }
