@@ -92,20 +92,33 @@ export class TaskManager {
 
   private serializeTask(task: ITask): string {
     let res = '';
-    res += `Task:${task.name}\n`;
+    res += '-------------------------------------------\n';
+    res += `Task: \x1b[1m\x1b[36m${task.name}\x1b[0m\n`;
     if (task.description) {
       res += `Description: ${task.description}\n`;
     }
-    if (task.deadline) {
-      res += `Deadline: ${task.deadline}\n`;
+    if (!task.deadline) {
+      res += 'Deadline: without deadline\n';
+    } else {
+      const deadline = task.deadline.slice(0, 10);
+      let color = '\x1b[32m';
+      if (this.isOmited(task)) {
+        color = '\x1b[33m';
+      }
+      res += `Deadline: ${color}${deadline}\x1b[0m\n`;
     }
 
-    if (task.done) {
-      const date = task.done.slice(0, 10);
-      res += `State: done ${date}\n`;
+    if (!task.done) {
+      res += `State: \x1b[31mnot done\x1b[0m\n`;
     } else {
-      res += `State: not done\n`;
+      let date = task.done.slice(0, 10);
+      const dateDone = new Date(task.done);
+      const dateDead = new Date(task.deadline);
+      if (this.compareDates(dateDone, dateDead))
+        date += ' \x1b[33mwith delay\x1b[0m';
+      res += `State: \x1b[32mdone\x1b[0m ${date}\n`;
     }
+    res += '-------------------------------------------';
     return res;
   }
 
