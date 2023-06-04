@@ -15,13 +15,18 @@ export class Interface {
 
   sortByDeadLine(tasks: ITask[]): ITask[] {
     return tasks.sort((a, b) => {
-      if (a.done !== '' && b.done === '') return 1;
-      if (a.done === '' && b.done !== '') return -1;
-      if (a.deadline === '' && b.deadline !== '') return 1;
-      if (a.deadline !== '' && b.deadline === '') return -1;
+      const isDoneA = a.done !== '' && b.done === ''
+      const isDoneB = a.done === '' && b.done !== ''
+      const noDeadLineA = a.deadline === '' && b.deadline !== ''
+      const noDeadLineB = a.deadline !== '' && b.deadline === ''
       const dateA = new Date(a.deadline);
       const dateB = new Date(b.deadline);
-      if (dateA.getTime() > dateB.getTime()) return 1;
+      const isFartherA = dateA.getTime() > dateB.getTime()
+      if (isDoneA) return 1;
+      if (isDoneB) return -1;
+      if (noDeadLineA) return 1;
+      if (noDeadLineB) return -1;
+      if (isFartherA) return 1;
       return -1;
     });
   }
