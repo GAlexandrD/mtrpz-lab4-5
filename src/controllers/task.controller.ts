@@ -1,14 +1,13 @@
 import { ITask, ITaskP } from '../types/ITask';
 import { TaskService } from '../services/task.service';
-
-const ERROR_NAME = 'please specify name to create task';
+import { TaskErrors } from '../enums/errors/task-errors.enum';
 
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
 
   async create(args: any) {
     try {
-      if (!args['-n']) throw new Error(ERROR_NAME);
+      if (!args['-n']) throw new Error(TaskErrors.specifyNameToCreateTask);
       const name = args['-n'];
       const done = '';
       let [description, deadline] = ['', ''];
@@ -42,7 +41,7 @@ export class TaskController {
 
   async markDone(args: any) {
     try {
-      if (!args['-n']) throw new Error(ERROR_NAME);
+      if (!args['-n']) throw new Error(TaskErrors.specifyNameToCreateTask);
       const name = args['-n'];
       const res = await this.taskService.markDone(name);
       console.log(res);
@@ -53,7 +52,7 @@ export class TaskController {
 
   async editTask(args: any) {
     try {
-      if (!args['-n']) throw new Error(ERROR_NAME);
+      if (!args['-n']) throw new Error(TaskErrors.specifyNameToCreateTask);
       const name = args['-n'];
       const edit: ITaskP = {};
       if (args['-i']) edit.description = args['-i'];
@@ -76,7 +75,7 @@ export class TaskController {
 
   async removeTask(args: any) {
     try {
-      if (!args['-n']) throw new Error(ERROR_NAME);
+      if (!args['-n']) throw new Error(TaskErrors.specifyNameToCreateTask);
       const name = args['-n'];
       const res = await this.taskService.removeTask(name);
       console.log(res);
