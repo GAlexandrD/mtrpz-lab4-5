@@ -2,6 +2,10 @@
 To use this app you need [Node.JS](https://nodejs.org/en/download) installed on your machine
 
 ## Setup instruction
+install dependencies
+```
+npm install
+```
 build app
 ```
 npm run build
