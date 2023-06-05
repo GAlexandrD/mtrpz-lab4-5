@@ -7,7 +7,7 @@ import {
   writeFile,
 } from 'fs/promises';
 import { join } from 'path';
-import { DbErrorMessages } from './errors/db-errors-enum';
+import { DbErrorMessages } from '../enums/errors/db-errors-enum';
 
 interface Index {
   [key: string]: string[];
