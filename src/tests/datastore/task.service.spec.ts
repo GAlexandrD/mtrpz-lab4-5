@@ -1,5 +1,5 @@
 import { DBMockGenerator } from './../__mocks__/db.mock';
-import { TaskService } from './../../datastore/task.service';
+import { TaskRepository } from './../../datastore/repositories/task.repository';
 import { ITask } from './../../types/ITask';
 
 let DB: ReturnType<typeof DBMockGenerator>;
@@ -13,7 +13,7 @@ describe('task service tests', () => {
     done: '',
   };
   //@ts-ignore
-  const taskService = new TaskService(DB);
+  const taskService = new TaskRepository(DB);
 
   it('create task', async () => {
     DB.readOne.mockReturnValue(null);

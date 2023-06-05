@@ -1,49 +1,49 @@
-import { TaskServiceMock } from './../__mocks__/task.service.mock';
+import { TaskRepositoryMock } from './../__mocks__/task.repository.mock';
 import { ITask, ITaskP } from './../../types/ITask';
 import { TaskService } from '../../services/task.service';
 
-let taskService: ReturnType<typeof TaskServiceMock>;
+let taskRepo: ReturnType<typeof TaskRepositoryMock>;
 
 describe('task manager service', () => {
   const task: ITask = { name: 'mock', deadline: '', description: '', done: '' };
 
   beforeEach(() => {
-    taskService = TaskServiceMock();
+    taskRepo = TaskRepositoryMock();
   });
 
   it('create task', async () => {
     // @ts-ignore
-    const taskManager = new TaskService(taskService);
-    taskService.markDone.mockReturnValue({ task, done: 'date' });
+    const taskManager = new TaskService(taskRepo);
+    taskRepo.markDone.mockReturnValue({ task, done: 'date' });
     await taskManager.markDone(task.name);
-    expect(taskService.markDone.mock.calls[0][0]).toBe(task.name);
+    expect(taskRepo.markDone.mock.calls[0][0]).toBe(task.name);
   });
 
   const editData: ITaskP = { description: 'info1' };
 
   it('edit task', async () => {
     // @ts-ignore
-    const taskManager = new TaskService(taskService);
-    taskService.editTask.mockReturnValue({ ...task });
+    const taskManager = new TaskService(taskRepo);
+    taskRepo.editTask.mockReturnValue({ ...task });
     await taskManager.editTask('mock', editData);
-    expect(taskService.editTask.mock.calls[0][0]).toBe(task.name);
-    expect(taskService.editTask.mock.calls[0][1]).toEqual(editData);
+    expect(taskRepo.editTask.mock.calls[0][0]).toBe(task.name);
+    expect(taskRepo.editTask.mock.calls[0][1]).toEqual(editData);
   });
 
   it('markdone task', async () => {
     // @ts-ignore
-    const taskManager = new TaskService(taskService);
-    taskService.markDone.mockReturnValue({ ...task, done: 'date' });
+    const taskManager = new TaskService(taskRepo);
+    taskRepo.markDone.mockReturnValue({ ...task, done: 'date' });
     await taskManager.markDone(task.name);
-    expect(taskService.markDone.mock.calls[0][0]).toBe(task.name);
+    expect(taskRepo.markDone.mock.calls[0][0]).toBe(task.name);
   });
 
   it('remove task', async () => {
     // @ts-ignore
-    const taskManager = new TaskService(taskService);
-    taskService.removeTask.mockReturnValue(task);
+    const taskManager = new TaskService(taskRepo);
+    taskRepo.removeTask.mockReturnValue(task);
     await taskManager.removeTask(task.name);
-    expect(taskService.removeTask.mock.calls[0][0]).toBe(task.name);
+    expect(taskRepo.removeTask.mock.calls[0][0]).toBe(task.name);
   });
 
   const tasks: ITask[] = [
@@ -75,23 +75,23 @@ describe('task manager service', () => {
 
   it('get lists tests', async () => {
     // @ts-ignore
-    const taskManager = new TaskService(taskService);
-    taskService.getAllTasks.mockReturnValue(tasks);
+    const taskManager = new TaskService(taskRepo);
+    taskRepo.getAllTasks.mockReturnValue(tasks);
     await taskManager.getAllTasks();
-    expect(taskService.getAllTasks.mock.calls.length).toBe(1);
+    expect(taskRepo.getAllTasks.mock.calls.length).toBe(1);
 
-    taskService.getAllTasks.mockReturnValue(tasks);
+    taskRepo.getAllTasks.mockReturnValue(tasks);
     await taskManager.getOmited();
-    expect(taskService.getAllTasks.mock.calls.length).toBe(2);
+    expect(taskRepo.getAllTasks.mock.calls.length).toBe(2);
 
-    taskService.getAllTasks.mockReturnValue(tasks);
+    taskRepo.getAllTasks.mockReturnValue(tasks);
     await taskManager.getUndone();
-    expect(taskService.getAllTasks.mock.calls.length).toBe(3);
+    expect(taskRepo.getAllTasks.mock.calls.length).toBe(3);
   });
 
   it('sort by deadline', () => {
     // @ts-ignore
-    const taskManager = new TaskService(taskService);
+    const taskManager = new TaskService(taskRepo);
     const result = taskManager.sortByDeadLine(tasks);
     expect(result[0].name).toBe('test1');
     expect(result[1].name).toBe('test2');
