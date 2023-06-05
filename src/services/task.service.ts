@@ -1,7 +1,7 @@
-import { ITask, ITaskP } from '../types/ITask.js';
+import { ITask, ITaskP } from '../types/ITask';
 import { TaskRepository } from '../datastore/repositories/task.repository';
 
-export class TaskManager {
+export class TaskService {
   tasks: TaskRepository;
   constructor(tasks: TaskRepository) {
     this.tasks = tasks;
