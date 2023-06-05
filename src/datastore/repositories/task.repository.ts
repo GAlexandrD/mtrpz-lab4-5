@@ -1,10 +1,10 @@
-import { ITask, ITaskP } from 'src/types/ITask.js';
-import { DB } from './db.js';
+import { ITask, ITaskP } from 'src/types/ITask';
+import { DB } from '../db';
 
 const ERROR_NOT_FOUND = 'task with such name doesn`t exists';
 const ERROR_EXISTS = 'task with such name already exists';
 
-export class TaskService {
+export class TaskRepository {
   private db: DB;
   constructor(db: DB) {
     this.db = db;
