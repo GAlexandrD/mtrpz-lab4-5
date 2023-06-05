@@ -1,6 +1,6 @@
 import { TaskServiceMock } from './../__mocks__/task.service.mock';
 import { ITask, ITaskP } from './../../types/ITask';
-import { TaskManager } from './../../time-manager/TaskManager.service';
+import { TaskService } from '../../services/task.service';
 
 let taskService: ReturnType<typeof TaskServiceMock>;
 
@@ -13,7 +13,7 @@ describe('task manager service', () => {
 
   it('create task', async () => {
     // @ts-ignore
-    const taskManager = new TaskManager(taskService);
+    const taskManager = new TaskService(taskService);
     taskService.markDone.mockReturnValue({ task, done: 'date' });
     await taskManager.markDone(task.name);
     expect(taskService.markDone.mock.calls[0][0]).toBe(task.name);
@@ -23,7 +23,7 @@ describe('task manager service', () => {
 
   it('edit task', async () => {
     // @ts-ignore
-    const taskManager = new TaskManager(taskService);
+    const taskManager = new TaskService(taskService);
     taskService.editTask.mockReturnValue({ ...task });
     await taskManager.editTask('mock', editData);
     expect(taskService.editTask.mock.calls[0][0]).toBe(task.name);
@@ -32,7 +32,7 @@ describe('task manager service', () => {
 
   it('markdone task', async () => {
     // @ts-ignore
-    const taskManager = new TaskManager(taskService);
+    const taskManager = new TaskService(taskService);
     taskService.markDone.mockReturnValue({ ...task, done: 'date' });
     await taskManager.markDone(task.name);
     expect(taskService.markDone.mock.calls[0][0]).toBe(task.name);
@@ -40,7 +40,7 @@ describe('task manager service', () => {
 
   it('remove task', async () => {
     // @ts-ignore
-    const taskManager = new TaskManager(taskService);
+    const taskManager = new TaskService(taskService);
     taskService.removeTask.mockReturnValue(task);
     await taskManager.removeTask(task.name);
     expect(taskService.removeTask.mock.calls[0][0]).toBe(task.name);
@@ -75,7 +75,7 @@ describe('task manager service', () => {
 
   it('get lists tests', async () => {
     // @ts-ignore
-    const taskManager = new TaskManager(taskService);
+    const taskManager = new TaskService(taskService);
     taskService.getAllTasks.mockReturnValue(tasks);
     await taskManager.getAllTasks();
     expect(taskService.getAllTasks.mock.calls.length).toBe(1);
@@ -91,7 +91,7 @@ describe('task manager service', () => {
 
   it('sort by deadline', () => {
     // @ts-ignore
-    const taskManager = new TaskManager(taskService);
+    const taskManager = new TaskService(taskService);
     const result = taskManager.sortByDeadLine(tasks);
     expect(result[0].name).toBe('test1');
     expect(result[1].name).toBe('test2');
