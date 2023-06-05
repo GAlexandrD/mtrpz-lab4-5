@@ -44,6 +44,6 @@ remove task
 ``` 
 node taskmanager remove -n [task name]
 ```
-## In all commands where with args:
+## In all commands with args:
 -n required <br>
 -e, -d, -i  optional
