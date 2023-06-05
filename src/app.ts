@@ -1,6 +1,5 @@
 import { TaskController } from './controllers/task.controller';
 import { ParserService } from './services/parser.service';
-import { DB } from './datastore/db';
 
 export class App {
   constructor(
