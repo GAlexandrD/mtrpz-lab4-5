@@ -42,7 +42,7 @@ node taskmanager markdone -n [task name]
 ```
 remove task
 ``` 
-node remove -n [task name]
+node taskmanager remove -n [task name]
 ```
 ## In all commands where with args:
 -n required <br>
