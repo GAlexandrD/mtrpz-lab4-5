@@ -57,6 +57,7 @@ export class TaskController {
       const edit: ITaskP = {};
       if (args['-i']) edit.description = args['-i'];
       if (args['-d']) edit.deadline = args['-d'];
+      if (args['-e']) edit.name = args['-e'];
       const res = await this.taskService.editTask(name, edit);
       console.log(res);
     } catch (error: any) {
